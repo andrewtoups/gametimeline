@@ -1,0 +1,30 @@
+svg {
+    font-size: 10px;
+}
+
+g {
+    overflow: visible;
+}
+
+text {
+    z-index: 20;
+}
+
+rect.pane {
+    cursor: move;
+    fill: none;
+    pointer-events: all;
+}
+
+.game-box {
+    border-style:solid;
+    padding:5px;
+    display:block;
+    float:left;
+}
+
+#games {
+    width:800px;
+    height:100px;
+    overflow:hidden;
+}
