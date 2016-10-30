@@ -2,9 +2,25 @@ console.log("Hello World", d3);
 puff.pollute(window);
 
 var width = 800;
-var height = 200;
+var height = 400;
 var yearsPerPixel;
 var pixelsPerYear;
+
+d3.selection.prototype.moveToFront = function() {  
+    return this.each(function(){
+        this.parentNode.appendChild(this);
+    });
+};
+d3.selection.prototype.moveToBack = function() {  
+    return this.each(function() { 
+        var firstChild = this.parentNode.firstChild; 
+        if (firstChild) { 
+            this.parentNode.insertBefore(this, firstChild); 
+        } 
+    });
+};
+
+var unselectedColor = "rgba(0,0,0,0.025)";
 
 function head(s,n){
     var n = (typeof n === "undefined") ? 10 : n;
@@ -19,10 +35,11 @@ function zipFields(s,keys){
     return map.apply(null, [a].concat(seqs));
 }
 
+
 function transformX(actual, low, high){
     var d = high-low;
     if(actual<0){
-	console.log(actual,d,low,high,high-low);
+	//console.log(actual,d,low,high,high-low);
     }
     return width*((actual-low)/d);
 }
@@ -54,29 +71,37 @@ function widenRange(range, amt){
 var asNiceString = p_(JSON.stringify,null,'  ');
 
 function containsOneOf(a){
-    return function(s){
-	return a.some(function(fragment){
-	    return s.includes(fragment);
-	});
-    };
+    if(a.length===0){
+	return function(s){
+	    return true;
+	};
+    } else {
+	return function(s){
+	    return a.some(function(fragment){
+		return s[2].includes(fragment);
+	    });
+	};
+    }
 }
 
-function minAndMaxDates(names,namesToYears){
-    return reduce(
-	function(ac,it){
-	    if(it.min < ac.min) ac.min = it.min;
-	    if(it.max > ac.max) ac.max = it.max;
-	    return ac;
-	},
-	map(function(name){
-	    return reduce(function(ac,it){
-		if(it[0]<ac.min) ac.min = it[0];
-		if(it[0]>ac.max) ac.max = it[0];
-		return ac;
-	    },namesToYears[name],
-			  {min:Infinity, max:-Infinity});
-	},names),
-	{min:Infinity, max:-Infinity});
+function minAndMaxDates(data){
+    return reduce(function(ac,d){
+	var mn = min2(ac.min,d[0]);
+	var mx = max2(ac.max,d[0]);
+	return {min:mn, max:mx};
+    },data,{min:Infinity,max:-Infinity});
+}
+
+function byDate(r1,r2){
+    var a = r1[0];
+    var b = r2[0];
+    if(a<b) return -1;
+    if(b>a) return 1;
+    return 0;
+}
+
+function emptyP(a){
+    return a.length === 0;
 }
 
 function adjustGamesList(data,namesToYears){
@@ -85,26 +110,46 @@ function adjustGamesList(data,namesToYears){
 		     map(trim));
     console.log("Filter is", asNiceString(filterPhrases));
     var names = rOn(data,
-		   map(p_(ix,
-			  2)),
-		   map(trim),
-		   unique,
-		   filter(containsOneOf(filterPhrases)));
+		    filter(containsOneOf(filterPhrases)));
+    var selectionWasEmpty = document.querySelector("#filter-box").value.trim() === "";
+    console.log(names.length)
+    names.sort(byDate);
+    console.log(names.length)
+    // console.log(names.slice(0,3));
+    // console.log(names.map(id).reverse().slice(0,3));
+
+    var noteString = ["<div>","earliest: ", first(names)[2],":", first(names)[1],"<br>",
+		      "latest:", last(names)[2], ":", last(names)[1], "</div>"].join("");
+
+    // d3.select("#notes")
+    // 	.data([noteString])
+    // 	.enter()
+    // 	.append("div")
+    // 	.html(noteString);
+    document.querySelector("#notes").innerHTML = noteString;
 
     var selection = d3.select("#games").selectAll("span")
-	    .data(names);
+	    .data(rOn(names,
+		      p_(unique,function(d){
+			  return d[2];
+		      })));
     selection
     	.enter()
 	.append("span")
-	.text(id)
+	.text(third)
 	.attr("class","game-box");
     selection
-	.text(id)
+	.text(third)
 	.attr("class","game-box");
     selection
 	.exit()
 	.remove();
     var boundaries = widenRange(minAndMaxDates(names, namesToYears));
+    if(boundaries.min === boundaries.max){
+	boundaries.min = boundaries.min - 50;
+	boundaries.max = boundaries.max + 50;
+    }
+    console.log("Boundaries",boundaries);
 
     var svg = d3.select("#timeline svg");
     
@@ -115,16 +160,59 @@ function adjustGamesList(data,namesToYears){
 	    return transformX(d[0],boundaries.min,boundaries.max);
 	})
 	.attr("fill",function(d){
-	    if(-1!==names.indexOf(d[2])){
+	    if(!selectionWasEmpty && containsOneOf(filterPhrases)(d)){
+		d.selected = true;
+		d3.select(this).moveToFront();
 		return "red";
 	    } else {
-		return "black";
+		d.selected = false;
+		return unselectedColor;
+	    }
+	});
+
+        svg.selectAll("text")
+	.transition()
+	.duration(500)
+	.attr("x",function(d){
+	    return transformX(d[0],boundaries.min,boundaries.max);
+	})
+	.attr("fill",function(d){
+	    if(d.selected){
+		d.selected = true;
+		d3.select(this).moveToFront();
+		return "red";
+	    } else {
+		d.selected = false;
+		return unselectedColor;
 	    }
 	});
 }
 
+function addYCoordinate(data){
+    var i = 0;
+    return rOn(data,
+	       sort(2),
+	       sort(0),
+	       map(function(a){
+		   a.push(Math.random()*(height-50)+25);
+		   i++;
+		   return a;
+	       }));
+}
+
+function scaleYears(data){
+    data.forEach(function(d){
+        var y = d[1];
+        if(y<10000) return;
+        if(y>1e6) d[1] = d[1]*1e-1;
+        if(y>1e9) d[1] = d[1]*1e-3;
+    });
+}
 function main(data){
     var data = zipFields(data, a("year","yearName","game","info"));
+    scaleYears(data);
+    data.sort(byDate);
+    document.querySelector("#filter-box").value = "";
     var namesToYears = {};
     data.forEach(function(d){
 	var name = d[2].trim();
@@ -133,20 +221,24 @@ function main(data){
 	nameList.push(d);
     });
     adjustGamesList(data,namesToYears);
+    document.querySelector("#filter-box").value = "";
     document.querySelector("#filter-box").addEventListener('change',
 							   function(){
 							       adjustGamesList(data, namesToYears);
 							   });
+    width = document.querySelector("#timeline").clientWidth;
+    height = Math.round(0.80*window.innerHeight);
+
+    d3.select("#games").attr("height",height);
+    
+    console.log("w,h",width,height);
     var svg = d3.select("#timeline")
 	    .append("svg")
 	    .attr("width",width)
 	    .attr("height",height)
 	    .append("g");
 
-    data = map(function(x){
-	x.push(25+(Math.random()*(height-50)));
-	return x;
-    },data);
+    data = addYCoordinate(data);
 
     var minYear = reduce(min2,map(p_(ix,0),data));
     var maxYear = reduce(max2,map(p_(ix,0),data));
@@ -168,7 +260,55 @@ function main(data){
 	    return d[4];
 	})
 	.attr("r",5)
-	.attr("fill","black");    
+	.attr("fill",unselectedColor)
+	.on('mouseover',function(d){
+	    if(!d.selected){
+		d3.select(this)
+		    .transition()
+		    .duration("200")
+		    .attr("fill","black");
+	    }
+	})
+	.on('mouseout',function(d){
+	    if(!d.selected){
+		d3.select(this)
+		    .transition()
+		    .duration("200")
+		    .attr("fill",unselectedColor);
+	    }
+	});
+
+    svg.selectAll("text")
+	.data(data)
+	.enter()
+	.append("text")
+	.attr("x",function(d){
+	    return transformX(d[0],range.min,range.max);
+	})
+	.attr("y",function(d){
+	    return d[4]-6;
+	})
+	.text(function(d){
+	    return d[2] + (d[3] ? d[3] : "") + " : " + d[1];
+	})
+	.attr("text-anchor","middle")
+	.attr("fill",unselectedColor)
+	.on('mouseover',function(d){
+	    if(!d.selected){
+		d3.select(this)
+		    .transition()
+		    .duration("200")
+		    .attr("fill","black");
+	    }
+	})
+	.on('mouseout',function(d){
+	    if(!d.selected){
+		d3.select(this)
+		    .transition()
+		    .duration("200")
+		    .attr("fill",unselectedColor);
+	    }
+	}); 
 }
 
 function loadStep(){

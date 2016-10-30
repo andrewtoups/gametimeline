@@ -90,9 +90,9 @@ function nonEmpty(s){
 function parseGame(s){
     if(s.includes("(")){
 	var parts = rOn(s,p_(split,new RegExp("[()]","g")),filter(nonEmpty));
-	return {name:parts[0],info:parts[1]};
+	return {name:parts[0].trim(),info:parts[1].trim()};
     } else {
-	return {name:s,info:null};
+	return {name:s.trim(),info:null};
     }
 }
 

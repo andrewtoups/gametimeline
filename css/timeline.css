@@ -17,14 +17,29 @@ rect.pane {
 }
 
 .game-box {
-    border-style:solid;
-    padding:5px;
+    padding:1px;
     display:block;
     float:left;
 }
 
+#header {
+    float:left;
+    width:100%;
+}
+
 #games {
-    width:800px;
-    height:100px;
+    width:20%;
     overflow:hidden;
+    height:600px;
+    float:left;
+}
+
+#timeline {
+    width:60%;
+    float:left;
+}
+
+#notes {
+    width:20%;
+    float:left;
 }
