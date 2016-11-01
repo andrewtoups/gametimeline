@@ -6,6 +6,23 @@ var height = 400;
 var yearsPerPixel;
 var pixelsPerYear;
 
+(function () {
+
+  if ( typeof window.CustomEvent === "function" ) return false;
+
+  function CustomEvent ( event, params ) {
+    params = params || { bubbles: false, cancelable: false, detail: undefined };
+    var evt = document.createEvent( 'CustomEvent' );
+    evt.initCustomEvent( event, params.bubbles, params.cancelable, params.detail );
+    return evt;
+   }
+
+  CustomEvent.prototype = window.Event.prototype;
+
+    window.CustomEvent = CustomEvent;
+    return undefined;
+})();
+
 d3.selection.prototype.moveToFront = function() {  
     return this.each(function(){
         this.parentNode.appendChild(this);
@@ -105,6 +122,43 @@ function emptyP(a){
     return a.length === 0;
 }
 
+function zoomInOrOut(amount){
+    var svg = d3.select("#timeline svg");
+    var boundaries = widenRange({min:+svg.attr("minYear"),max:+svg.attr("maxYear")},amount);
+    if(boundaries.min === boundaries.max){
+	boundaries.min = boundaries.min - 50;
+	boundaries.max = boundaries.max + 50;
+    }
+    svg.attr("minYear",boundaries.min);
+    svg.attr("maxYear",boundaries.max);
+    var items = svg.selectAll(".item");
+    items.transition()
+        .duration(500)
+        .attr("transform",function(d){                        
+            return translate(transformX(d[0],boundaries.min,boundaries.max),d[4]);
+        });    
+}
+
+function moveCenter(pct){
+    var svg = d3.select("#timeline svg");
+    var boundaries = {min:+svg.attr("minYear"),max:+svg.attr("maxYear")};
+    var delta = pct*(boundaries.max-boundaries.min);
+    boundaries.min = boundaries.min + delta;
+    boundaries.max = boundaries.max + delta;
+    if(boundaries.min === boundaries.max){
+	boundaries.min = boundaries.min - 50;
+	boundaries.max = boundaries.max + 50;
+    }
+    svg.attr("minYear",boundaries.min);
+    svg.attr("maxYear",boundaries.max);
+    var items = svg.selectAll(".item");
+    items.transition()
+        .duration(500)
+        .attr("transform",function(d){                        
+            return translate(transformX(d[0],boundaries.min,boundaries.max),d[4]);
+        });    
+}
+
 function adjustGamesList(data,namesToYears){
     var filterPhrases = rOn(document.querySelector("#filter-box").value,
 		     split(","),
@@ -150,6 +204,9 @@ function adjustGamesList(data,namesToYears){
 	boundaries.min = boundaries.min - 50;
 	boundaries.max = boundaries.max + 50;
     }
+    d3.select("#timeline svg").attr("minYear",boundaries.min);
+    d3.select("#timeline svg").attr("maxYear",boundaries.max);
+
     console.log("Boundaries",boundaries);
 
     var svg = d3.select("#timeline svg");
@@ -158,30 +215,32 @@ function adjustGamesList(data,namesToYears){
     items.transition()
         .duration(500)
         .attr("transform",function(d){
+            var ss = d3.select(this);
+            var selected = !selectionWasEmpty && containsOneOf(filterPhrases)(d);
+            d.selected = selected;
+            ss.select("text")
+                .transition()
+                .duration(500)
+                .style("fill",function(d){
+                    if(selected){
+                        return "rgba(255,0,0,1)";
+                    } else {
+                        return unselectedTextColor;
+                    }
+                });
+            ss.select("circle")
+                .transition()
+                .duration(500)
+                .attr("fill",function(d){
+                    if(selected){
+                        return "rgba(255,0,0,1)";
+                    } else {
+                        return unselectedTextColor;
+                    }
+                });
+            
             return translate(transformX(d[0],boundaries.min,boundaries.max),d[4]);
         });
-    items.select("text")
-        .transition()
-        .duration(500)
-        .style("fill",function(d){
-            if(!selectionWasEmpty && containsOneOf(filterPhrases)(d)){
-                d.selected = true;
-                return "rgba(255,0,0,1)";
-            } else {
-                d.selected = false;
-                return unselectedTextColor;
-            }
-        });
-    items.select("circle")
-        .transition()
-        .duration(500)
-        .attr("fill",function(d){
-            if(d.selected){
-                return "rgba(255,0,0,1)";
-            } else {
-                return unselectedTextColor;
-            }
-        });               
 }
 
 function addYCoordinate(data){
@@ -249,7 +308,10 @@ function main(data){
     var yearRange = maxYear-minYear;
     yearsPerPixel = yearRange/width;
     pixelsPerYear = width/yearRange;
+    d3.select("#timeline svg").attr("minYear",range.min);
+    d3.select("#timeline svg").attr("maxYear",range.max);
 
+    var selectionChanging = false;
     svg.selectAll(".item")
         .data(data)
         .enter()
@@ -274,79 +336,86 @@ function main(data){
 	        .style("fill",unselectedTextColor);
         })
         .on("mouseover",function(d){
-            d3.select(this).select("text").transition().duration("200").style("fill","black");
-            d3.select(this).select("circle").transition().duration("200").style("fill","black");
+            if(!selectionChanging){
+                d3.select(this).select("text").transition().duration("200").style("fill","black");
+                d3.select(this).select("circle").transition().duration("200").style("fill","black");
+            }
         })
         .on("mouseout",function(d){
-            if(d.selected){
+            if(!selectionChanging){
+                if(d.selected){
                 d3.select(this).select("text").transition().duration("200").style("fill","rgba(255,0,0,1)");
                 d3.select(this).select("circle").transition().duration("200").style("fill","rgba(255,0,0,1)");
             }else{
                 d3.select(this).select("text").transition().duration("200").style("fill",unselectedTextColor);
                 d3.select(this).select("circle").transition().duration("200").style("fill",unselectedColor);
             }
+            }
+        })
+        .on("click",function(d){
+            var game = d[2];
+            document.querySelector("#filter-box").value = game;
+            var evt = new CustomEvent("change",{});
+            selectionChanging = true;
+            setTimeout(function(){
+                document.querySelector("#filter-box").dispatchEvent(evt);
+            },100);
+            setTimeout(function(){
+                selectionChanging = false;
+            },550)
         });
 
-    // svg.selectAll("circle")
-    //     .data(data)
-    //     .enter()
-    //     .append("circle")
-    //     .attr("cx",function(d){
-    //         return transformX(d[0],range.min,range.max);
-    //     })
-    //     .attr("cy",function(d){
-    //         return d[4];
-    //     })
-    //     .attr("r",5)
-    //     .attr("fill",unselectedColor)
-    //     .on('mouseover',function(d){
-    //         if(!d.selected){
-    //     	d3.select(this)
-    //     	    .transition()
-    //     	    .duration("200")
-    //     	    .attr("fill","black");
-    //         }
-    //     })
-    //     .on('mouseout',function(d){
-    //         if(!d.selected){
-    //     	d3.select(this)
-    //     	    .transition()
-    //     	    .duration("200")
-    //     	    .attr("fill",unselectedColor);
-    //         }
-    //     });
+    document.querySelector("#zoom-in").addEventListener("click",function(){
+        zoomInOrOut(0.8);
+    });
+    document.querySelector("#zoom-out").addEventListener("click",function(){
+        zoomInOrOut(1.4);
+    });
 
-    // svg.selectAll("text")
-    //     .data(data)
-    //     .enter()
-    //     .append("text")
-    //     .attr("x",function(d){
-    //         return transformX(d[0],range.min,range.max);
-    //     })
-    //     .attr("y",function(d){
-    //         return d[4]-6;
-    //     })
-    //     .text(function(d){
-    //         return d[2] + (d[3] ? d[3] : "") + " : " + d[1];
-    //     })
-    //     .attr("text-anchor","middle")
-    //     .attr("fill",unselectedColor)
-    //     .on('mouseover',function(d){
-    //         if(!d.selected){
-    //     	d3.select(this)
-    //     	    .transition()
-    //     	    .duration("200")
-    //     	    .attr("fill","black");
-    //         }
-    //     })
-    //     .on('mouseout',function(d){
-    //         if(!d.selected){
-    //     	d3.select(this)
-    //     	    .transition()
-    //     	    .duration("200")
-    //     	    .attr("fill",unselectedColor);
-    //         }
-    //     }); 
+    var dragging = false;
+    var lastX = false;
+    d3.select("#timeline svg").on("mousedown",function(d,i){
+        dragging = true;
+        lastX = d3.event.clientX;
+        return true;
+    });
+    d3.select("#timeline svg").on("mouseup",function(d,i){
+        dragging = false;
+        clearSelection();
+    });
+    d3.select("#timeline svg").on("mousemove",function(){        
+        if(dragging){
+            var svg = d3.select("#timeline svg");
+            var boundaries = {min:+svg.attr("minYear"),max:+svg.attr("maxYear")};
+            var width = (boundaries.max - boundaries.min);
+            var center = width/2;
+            var yearsPerPixel = width/parseInt(svg.style("width"),10);
+            var newCenter = center + yearsPerPixel*(lastX - d3.event.clientX);
+            console.log(d3.event.clientX, lastX - d3.event.clientX, "years", yearsPerPixel*(lastX - d3.event.clientX));
+            boundaries.min = boundaries.min + yearsPerPixel*(lastX - d3.event.clientX);
+            boundaries.max = boundaries.max + yearsPerPixel*(lastX - d3.event.clientX);
+            svg.attr("minYear",boundaries.min);
+            svg.attr("maxYear",boundaries.max);
+            svg.selectAll(".item")
+                .attr("transform",function(d){
+                    return translate(transformX(d[0],boundaries.min,boundaries.max),d[4]);
+                });
+            console.log(d3.event.clientX, lastX - d3.event.clientX, "years", yearsPerPixel*(lastX - d3.event.clientX));
+            lastX = d3.event.clientX;
+            clearSelection();
+        }
+    });
+
+
+}
+
+function clearSelection() {
+    if(document.selection && document.selection.empty) {
+        document.selection.empty();
+    } else if(window.getSelection) {
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+    }
 }
 
 function loadStep(){
