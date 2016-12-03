@@ -32,6 +32,7 @@ function remapData(data){
             year:scaleYear(data.year[i]),
             yearName:data.yearName[i],
             game:data.game[i],
+            game_lower:data.game[i].toLowerCase(),
             info:data.info[i],
             y:Math.random()*0.8+0.1
         });
@@ -198,7 +199,7 @@ function setupSearch(box,data,containers){
     box.addEventListener("change",function(){
         var svg = d3.select("#timeline svg");
         var raw = box.value.trim();
-        var s = box.value.trim().split(",");
+        var s = box.value.trim().split(",").map(lower);
         var n = s.length;
         var selections = raw === "" ?
                 {selected:[],unselected:data}
@@ -208,10 +209,13 @@ function setupSearch(box,data,containers){
                         svg.attr("height"));
         function hash(d){
             for(var i = 0; i< n;i++){
-                if(d.game.includes(s[i])) return "selected";
+                if(d.game_lower.includes(s[i])) return "selected";
             }
             return "unselected";
         };
+        function lower(s){
+            return s.toLowerCase();
+        }
     });
 }
 
