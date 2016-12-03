@@ -31,31 +31,47 @@ rect.pane {
   pointer-events: all; }
 
 #timeline {
-  background-color: #d5bfaa; }
-  #timeline .graphic {
-    height: calc(100vh);
-    width: calc(100vw);
-    position: relative; }
+  background-color: #d5bfaa;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow: hidden; }
 
-#header, #zoom {
+#footer, #header {
   position: fixed;
-  background-color: #e6dbce;
-  top: 5px;
-  padding: 5px; }
+  width: calc(100% - 5px);
+  display: flex; }
+  #footer > *, #header > * {
+    background-color: rgba(230, 219, 206, 0.5);
+    padding: 5px; }
 
 #header {
-  left: 5px; }
+  top: 5px;
+  justify-content: flex-end; }
+
+#footer {
+  bottom: 5px;
+  justify-content: center; }
+
+#controls {
+  display: flex;
+  flex-direction: row; }
+  #controls > * {
+    margin: 0 5px; }
+
+#filter-box {
+  font-size: 2rem; }
 
 #zoom {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  right: 5px;
-  padding: 5px; }
+  justify-content: space-between;
+  height: 100%; }
 
 #notes {
   width: 20%;
-  float: left; }
+  float: left;
+  display: none; }
 
 body {
   background: #e6dbce;
