@@ -6,15 +6,39 @@
     overflow: hidden;
 }
 
-#header, #zoom {
+#footer, #header {
   position: fixed;
-  background-color: $fami-beige;
-  top: 5px;
-  padding: 5px;
+  width: calc(100% - 5px);
+  display: flex;
+
+  > * {
+    background-color: rgba($fami-beige, .5);
+    padding: 5px;
+  }
+
 }
 
 #header {
-  left: 5px;
+  top: 5px;
+  justify-content: flex-end;
+}
+
+#footer {
+  bottom: 5px;
+  justify-content: center;
+}
+
+#controls {
+  display: flex;
+  flex-direction: row;
+
+  > * {
+    margin: 0 5px;
+  }
+}
+
+#filter-box {
+  font-size: 2rem;
 }
 
 #zoom {
