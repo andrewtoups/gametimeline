@@ -1,0 +1,44 @@
+svg {
+    font-size: 10px;
+}
+
+text {
+  fill: $fami-black;
+  transition: transform .1s linear;
+  pointer-events: none;
+  z-index: 20;
+}
+
+g.item {
+    overflow: visible;
+
+    &:hover {
+      fill: rgba($fami-darkbeige, .75);
+    }
+
+    circle:hover {
+      fill: $fami-highlight;
+      cursor: pointer;
+    }
+
+    circle:hover ~ text {
+      fill: $fami-highlight;
+      transform: scale(2);
+      transition: transform .1s linear;
+    }
+}
+
+g.selected {
+    fill: black;
+}
+
+
+g.unselected {
+    fill:rgba(0,0,0,0.1);
+}
+
+rect.pane {
+    cursor: move;
+    fill: none;
+    pointer-events: all;
+}

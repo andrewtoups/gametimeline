@@ -1,0 +1,11 @@
+@import 'partials/palette';
+@import 'partials/data';
+@import 'partials/layout';
+
+body {
+  background: $fami-beige;
+  color: $fami-darkred;
+  font-family: sans-serif;
+  font-weight: 100;
+  margin: 0;
+}

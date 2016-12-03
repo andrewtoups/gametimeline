@@ -1,0 +1,55 @@
+#timeline {
+    background-color: $fami-darkbeige;
+    height: 100vh;
+    width: 100vw;
+    position: relative;
+    overflow: hidden;
+}
+
+#footer, #header {
+  position: fixed;
+  width: calc(100% - 5px);
+  display: flex;
+
+  > * {
+    background-color: rgba($fami-beige, .5);
+    padding: 5px;
+  }
+
+}
+
+#header {
+  top: 5px;
+  justify-content: flex-end;
+}
+
+#footer {
+  bottom: 5px;
+  justify-content: center;
+}
+
+#controls {
+  display: flex;
+  flex-direction: row;
+
+  > * {
+    margin: 0 5px;
+  }
+}
+
+#filter-box {
+  font-size: 2rem;
+}
+
+#zoom {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+#notes {
+  width:20%;
+  float:left;
+  display: none;
+}
