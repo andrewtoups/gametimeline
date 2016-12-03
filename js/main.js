@@ -82,11 +82,6 @@ function circleClickHandler(d){
     document.querySelector("#filter-box").dispatchEvent(evt);
 }
 
-var oldRange = undefined;
-function updateZoom(newRange){
-    oldRange = newRange;
-}
-
 function makeYearMarkers(data){
     var range = dataSelectionToRange(data);
     var largest = puff.max(Math.abs(range.min),Math.abs(range.max));
@@ -110,11 +105,15 @@ function makeYearMarkers(data){
 }
 function updateSelection(selections,containers,parentW,parentH,range){
     range = range || getRange(selections);
-    oldRange = oldRange || range;
+    var oldRange = containers.groupContainer.attr("rangeMin") ? {
+        min:+(containers.groupContainer.attr("rangeMin")),
+        max:+(containers.groupContainer.attr("rangeMax"))
+    } : range;
     var mn = range.min;
     var mx = range.max;
     var omn = oldRange.min;
     var omx = oldRange.max;
+    containers.groupContainer.attr("rangeMin",mn).attr("rangeMax",mx);
     Object.keys(selections).forEach(function(k){
         var selection = selections[k];
         var container = containers[k];
@@ -161,7 +160,6 @@ function updateSelection(selections,containers,parentW,parentH,range){
         .attr("x2",function(d){
             return transformX(d.year,mn,mx,parentW); 
         });
-    oldRange = range;
 }
 
 function widenRange(range, amt){
@@ -169,7 +167,7 @@ function widenRange(range, amt){
     var d = range.max-range.min;
     var diff = (d*amt - d)/2;
     if(diff === 0) diff = 20;
-    return {min:range.min-diff, max:range.max+diff};
+    return {min:Math.round(range.min-diff), max:Math.round(range.max+diff)};
 }
 
 
@@ -219,6 +217,45 @@ function setupSearch(box,data,containers){
     });
 }
 
+function getRangeFromContainers(containers){
+    return {
+        min:+containers.groupContainer.attr("rangeMin"),
+        max:+containers.groupContainer.attr("rangeMax")
+    };
+}
+
+function setRangeOnContainers(containers,range){
+    containers.groupContainer.attr("rangeMin",range.min);
+    containers.groupContainer.attr("rangeMax",range.max);
+}
+
+function setupZoomButtons(inButton,outButton,data,containers){
+    inButton.addEventListener('click',zoom(0.85));
+    outButton.addEventListener('click',zoom(1.15));
+    function zoom(howMuch){
+        return function(){
+            var oldRange = getRangeFromContainers(containers);
+            var newRange = widenRange(oldRange,howMuch);
+            setRangeOnContainers(containers,newRange);
+            var mn = newRange.min;
+            var mx = newRange.max;
+            var parentW = containers.wholeSvg.attr("width");
+            var parentH = containers.wholeSvg.attr("height");
+            containers.selected.selectAll(".item")
+                .transition().duration(500)
+                .attr("transform",function(d){
+                    return translate(transformX(d.year,mn,mx,parentW),d.y*parentH) + " "+scale(1.5,1.5);
+                });
+            containers.unselected.selectAll(".item")
+                .transition().duration(500)
+                .attr("transform",function(d){
+                    return translate(transformX(d.year,mn,mx,parentW),d.y*parentH);
+                });            
+        };
+    }
+
+}
+
 function main(data){
     console.log(data);
     var years = makeYearMarkers(data);
@@ -229,31 +266,22 @@ function main(data){
     var range = getRange(selections);
     var width = document.querySelector("#timeline").clientWidth;
     var height = Math.round(0.80*window.innerHeight);
-    var groupContainer = d3.select("#timeline")
-	    .append("svg")
-            .attr("minYear",range.min)
-            .attr("maxYear",range.max)
+    var wholeSvg = d3.select("#timeline")
+	    .append("svg");
+    var groupContainer = wholeSvg
 	    .attr("width",width)
 	    .attr("height",height)
-	    .append("g");
+	    .append("g")
+            .attr("class","group-container")
+            .attr("rangeMin",range.min)
+            .attr("rangeMax",range.max);
 
     var yearContainer = groupContainer.append("g")
-            .attr("class","year-markers");
-    // yearContainer
-    //     .selectAll("line")
-    //     .data(years)
-    //     .enter()
-    //     .append("line")
-    //     .attr("x1",function(d){
-    //         return transformX(d.year,range.min,range.max,width);
-    //     }).attr("x2",function(d){
-    //         return transformX(d.year,range.min,range.max,width);
-    //     })
-    //     .attr("y1",0).attr("y2",height)
-    //     .style("stroke","black")
-    //     .style("stroke-width","1");x
-    
+            .attr("class","year-markers");    
     var containers = {
+        wholeSvg:wholeSvg,
+        groupContainer:groupContainer,
+        yearContainer:yearContainer,
         unselected:groupContainer
 	    .append("g")
             .attr("class","unselected"),
@@ -263,5 +291,7 @@ function main(data){
     };
     updateSelection(selections, containers, width, height);
     setupSearch(document.querySelector("#filter-box"),data,containers);
+    setupZoomButtons(document.querySelector("#zoom-in"),document.querySelector("#zoom-out"),data,containers);
 }
+
 
