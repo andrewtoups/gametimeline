@@ -1,29 +1,47 @@
 svg {
   font-size: 10px; }
 
-text {
-  fill: #2c292c;
-  transition: transform .1s linear;
-  pointer-events: none;
-  z-index: 20; }
-
-g.item {
+.item {
   overflow: visible; }
-  g.item:hover {
-    fill: rgba(213, 191, 170, 0.75); }
-  g.item circle:hover {
+
+text {
+  transform: scale(1);
+  fill: #d5bfaa;
+  opacity: .5;
+  text-shadow: none;
+  pointer-events: none;
+  transition: transform 200ms ease, opacity 200ms ease, fill 200ms ease, text-shadow 200ms ease; }
+
+circle {
+  opacity: .1;
+  fill: #987868;
+  transition: fill 200ms ease, opacity 200ms ease; }
+  circle:hover {
     fill: #e8ae11;
-    cursor: pointer; }
-  g.item circle:hover ~ text {
-    fill: #e8ae11;
+    opacity: 1;
+    cursor: pointer;
+    transition: fill 200ms ease, opacity 200ms ease; }
+  circle:hover ~ text {
     transform: scale(2);
-    transition: transform .1s linear; }
+    opacity: 1;
+    fill: #e8ae11;
+    text-shadow: 0 0 5px #2c292c;
+    transition: transform 200ms ease, opacity 200ms ease, fill 200ms ease, text-shadow 200ms ease; }
 
-g.selected {
-  fill: black; }
+.selected text, .selected circle {
+  fill: #81061d;
+  opacity: 1; }
+.selected circle:hover {
+  fill: #e8ae11; }
 
-g.unselected {
-  fill: rgba(0, 0, 0, 0.1); }
+.unselected circle {
+  opacity: .1; }
+  .unselected circle:hover {
+    opacity: 1; }
+.unselected text {
+  opacity: .5; }
+.unselected text, .unselected circle {
+  transition: transform 200ms ease, opacity 200ms ease, fill 200ms ease; }
 
 rect.pane {
   cursor: move;
@@ -31,7 +49,7 @@ rect.pane {
   pointer-events: all; }
 
 #timeline {
-  background-color: #d5bfaa;
+  background-color: #e6dbce;
   height: 100vh;
   width: 100vw;
   position: relative;
@@ -42,7 +60,7 @@ rect.pane {
   width: calc(100% - 5px);
   display: flex; }
   #footer > *, #header > * {
-    background-color: rgba(230, 219, 206, 0.5);
+    background-color: rgba(129, 6, 29, 0.5);
     padding: 5px; }
 
 #header {
