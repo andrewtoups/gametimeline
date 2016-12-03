@@ -1,5 +1,5 @@
 #timeline {
-    background-color: $fami-darkbeige;
+    background-color: $fami-beige;
     height: 100vh;
     width: 100vw;
     position: relative;
@@ -12,7 +12,7 @@
   display: flex;
 
   > * {
-    background-color: rgba($fami-beige, .5);
+    background-color: rgba($fami-red, .5);
     padding: 5px;
   }
 
