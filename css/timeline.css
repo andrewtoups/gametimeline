@@ -2,8 +2,42 @@ svg {
     font-size: 10px;
 }
 
-g {
+g.item {
     overflow: visible;
+    -webkit-transition: all 0.5s ease-in-out;
+    -moz-transition: all 0.5s ease-in-out;
+    -o-transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out;
+}
+
+
+
+g.selected {
+    fill:black;
+}
+
+g.selected g.item circle:hover ~ text {
+    fill:rgba(0,0,255,1);
+}
+g.selected g.item circle:hover {
+    fill:rgba(0,0,255,1);
+}
+
+text {
+    pointer-events: none;
+}
+
+g.unselected {
+    fill:rgba(0,0,0,0.1);
+}
+
+g.unselected g.item circle:hover ~ text
+{
+    fill:rgba(0,0,0,1);
+}
+g.unselected g.item circle:hover
+{
+    fill:rgba(0,0,0,1);
 }
 
 text {
