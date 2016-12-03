@@ -1,0 +1,32 @@
+#timeline {
+    background-color: $fami-darkbeige;
+    .graphic {
+      height: calc(100vh);
+      width: calc(100vw);
+      position: relative;
+    }
+}
+
+#header, #zoom {
+  position: fixed;
+  background-color: $fami-beige;
+  top: 5px;
+  padding: 5px;
+}
+
+#header {
+  left: 5px;
+}
+
+#zoom {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  right: 5px;
+  padding: 5px;
+}
+
+#notes {
+  width:20%;
+  float:left;
+}

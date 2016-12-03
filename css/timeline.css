@@ -1,96 +1,67 @@
 svg {
-    font-size: 10px;
-}
+  font-size: 10px; }
+
+text {
+  fill: #2c292c;
+  transition: transform .1s linear;
+  pointer-events: none;
+  z-index: 20; }
 
 g.item {
-    overflow: visible;
-    -webkit-transition: all 0.5s ease-in-out;
-    -moz-transition: all 0.5s ease-in-out;
-    -o-transition: all 0.5s ease-in-out;
-    transition: all 0.5s ease-in-out;
-}
-
-
+  overflow: visible; }
+  g.item:hover {
+    fill: rgba(213, 191, 170, 0.75); }
+  g.item circle:hover {
+    fill: #e8ae11;
+    cursor: pointer; }
+  g.item circle:hover ~ text {
+    fill: #e8ae11;
+    transform: scale(2);
+    transition: transform .1s linear; }
 
 g.selected {
-    fill:black;
-}
-
-g.selected g.item circle:hover ~ text {
-    fill:rgba(0,0,255,1);
-}
-g.selected g.item circle:hover {
-    fill:rgba(0,0,255,1);
-}
-
-text {
-    pointer-events: none;
-}
+  fill: black; }
 
 g.unselected {
-    fill:rgba(0,0,0,0.1);
-}
-
-g.unselected g.item circle:hover ~ text
-{
-    fill:rgba(0,0,0,1);
-}
-g.unselected g.item circle:hover
-{
-    fill:rgba(0,0,0,1);
-}
-
-text {
-    z-index: 20;
-}
+  fill: rgba(0, 0, 0, 0.1); }
 
 rect.pane {
-    cursor: move;
-    fill: none;
-    pointer-events: all;
-}
-
-.game-box {
-    padding:1px;
-    display:block;
-    float:left;
-}
-
-#header {
-    float:left;
-    width:100%;
-}
-
-#games {
-    width:20%;
-    overflow:hidden;
-    height:600px;
-    float:left;
-}
+  cursor: move;
+  fill: none;
+  pointer-events: all; }
 
 #timeline {
-    position:relative;
-    width:60%;
-    float:left;
-}
+  background-color: #d5bfaa; }
+  #timeline .graphic {
+    height: calc(100vh);
+    width: calc(100vw);
+    position: relative; }
 
-#zoom-in {
-    position:absolute;
-    top:10px;
-    right:10px;
-    width:20px;
-    height:20px;
-}
+#header, #zoom {
+  position: fixed;
+  background-color: #e6dbce;
+  top: 5px;
+  padding: 5px; }
 
-#zoom-out {
-    position:absolute;
-    top:30px;
-    right:10px;
-    width:20px;
-    height:20px;
-}
+#header {
+  left: 5px; }
+
+#zoom {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  right: 5px;
+  padding: 5px; }
 
 #notes {
-    width:20%;
-    float:left;
-}
+  width: 20%;
+  float: left; }
+
+body {
+  background: #e6dbce;
+  color: #7a1b1d;
+  font-family: sans-serif;
+  font-weight: 100;
+  margin: 0; }
+
+/*# sourceMappingURL=timeline.css.map */
