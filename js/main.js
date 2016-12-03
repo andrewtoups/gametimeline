@@ -92,7 +92,7 @@ function makeYearMarkers(data){
     while(year<largest){
         year = year + yearToStep(year);
         years.push({year:year,id:id++});
-        years.push({year:-year,id:id++});        
+        years.push({year:-year,id:id++});
     }
     return years;
     function yearToStep(year){
@@ -155,10 +155,10 @@ function updateSelection(selections,containers,parentW,parentH,range){
     d3.select(".year-markers").selectAll("line")
         .transition().duration(500)
         .attr("x1",function(d){
-            return transformX(d.year,mn,mx,parentW); 
+            return transformX(d.year,mn,mx,parentW);
         })
         .attr("x2",function(d){
-            return transformX(d.year,mn,mx,parentW); 
+            return transformX(d.year,mn,mx,parentW);
         });
 }
 
@@ -182,7 +182,7 @@ function dataSelectionToRange(data,pad){
         if(d.year < mn) mn = d.year;
         if(d.year > mx) mx = d.year;
     }
-    return widenRange({min:mn,max:mx},pad);    
+    return widenRange({min:mn,max:mx},pad);
 }
 
 function getRange(data){
@@ -193,7 +193,7 @@ function getRange(data){
     }
 }
 
-function setupSearch(box,data,containers){    
+function setupSearch(box,data,containers){
     box.addEventListener("change",function(){
         var svg = d3.select("#timeline svg");
         var raw = box.value.trim();
@@ -283,7 +283,7 @@ function setupZoomButtons(inButton,outButton,containers,data){
             }
             },501);
         };
-    }    
+    }
 }
 
 
@@ -347,7 +347,7 @@ function main(data){
     };
     var range = getRange(selections);
     var width = document.querySelector("#timeline").clientWidth;
-    var height = Math.round(0.80*window.innerHeight);
+    var height = document.querySelector("#timeline").clientHeight;
     var wholeSvg = d3.select("#timeline")
 	    .append("svg");
     var groupContainer = wholeSvg
@@ -359,7 +359,7 @@ function main(data){
             .attr("rangeMax",range.max);
 
     var yearContainer = groupContainer.append("g")
-            .attr("class","year-markers");    
+            .attr("class","year-markers");
     var containers = {
         wholeSvg:wholeSvg,
         groupContainer:groupContainer,
@@ -376,5 +376,3 @@ function main(data){
     setupZoomButtons(document.querySelector("#zoom-in"),document.querySelector("#zoom-out"),containers,data);
     setupDrag(containers);
 }
-
-
