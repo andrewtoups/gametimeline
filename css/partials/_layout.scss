@@ -44,9 +44,8 @@
 #zoom {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  right: 5px;
-  padding: 5px;
+  justify-content: space-between;
+  height: 100%;
 }
 
 #notes {
