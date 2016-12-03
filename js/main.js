@@ -82,6 +82,7 @@ function circleClickHandler(d){
     document.querySelector("#filter-box").dispatchEvent(evt);
 }
 
+
 function makeYearMarkers(data){
     var range = dataSelectionToRange(data);
     var largest = puff.max(Math.abs(range.min),Math.abs(range.max));
@@ -103,6 +104,7 @@ function makeYearMarkers(data){
         return 100000000;
     }
 }
+
 function updateSelection(selections,containers,parentW,parentH,range){
     range = range || getRange(selections);
     var oldRange = containers.groupContainer.attr("rangeMin") ? {
@@ -152,14 +154,7 @@ function updateSelection(selections,containers,parentW,parentH,range){
                 .remove();
         }
     });
-    d3.select(".year-markers").selectAll("line")
-        .transition().duration(500)
-        .attr("x1",function(d){
-            return transformX(d.year,mn,mx,parentW);
-        })
-        .attr("x2",function(d){
-            return transformX(d.year,mn,mx,parentW);
-        });
+    updateYearMarkers(containers);
 }
 
 function widenRange(range, amt){
@@ -229,6 +224,76 @@ function setRangeOnContainers(containers,range){
     containers.groupContainer.attr("rangeMax",range.max);
 }
 
+function numDigits(x) {
+  return (Math.log10((x ^ (x >> 31)) - (x >> 31)) | 0) + 1;
+}
+
+function calculateYears(range,discount){
+    discount = typeof discount === "undefined" ? 0 : discount;
+    var ia = puff.ia;
+    var always = puff.always;
+    var width = Math.round(range.max-range.min);
+    var nDigits = numDigits(width);
+    var step = +("1"+ia(nDigits-2-discount,always("0")).join(""));
+    var start = Math.floor(range.min/step)*step;
+    var stop = Math.ceil(range.max/step)*step;
+    var out = [start];
+    while(out[out.length-1]<stop){
+        out.push(out[out.length-1]+step);
+    }
+    out = out.map(function(y){
+        return {
+            year:y,
+            yearName:y.toString()
+        };
+    });
+    if(out.length>50){
+        return calculateYears(range,discount-1);
+    } else {
+        return out;
+    }
+}
+
+function updateYearMarkers(containers,transition){
+    transition = typeof transition === "undefined" ? true : transition;
+    var range = getRangeFromContainers(containers);
+    var years = calculateYears(range);
+    var selection = containers.yearContainer.selectAll(".year-marker").data(years,yearItself);
+    var parentW = containers.wholeSvg.attr("width");
+    var parentH = containers.wholeSvg.attr("height");
+    var mn = range.min;
+    var mx = range.max;
+    selection.exit().remove();
+    (transition ? selection.transition().duration(500) : selection)
+        .attr("transform",function(d){
+            return translate(transformX(d.year,mn,mx,parentW),0);
+        });
+    (transition ? setTimeout : callDirectly)(function(){
+                            selection.enter().append("g").attr("class","year-marker")
+                            .attr("transform",function(d){
+                                                          return translate(transformX(d.year,mn,mx,parentW),0);
+                                                          })
+                            .call(function(g){
+                                              g.append("line")
+                                              .attr("x1",0)
+                                              .attr("x2",0)
+                                              .attr("y1",0)
+                                              .attr("y2",parentH)
+                                              .style("stroke","black");
+                                              g.append("text").text(function(d){
+                                                                                return d.yearName;
+                                                                                }).attr("x",4).attr("y",20).style("stroke","black");
+                                              });
+                            },501);
+    
+    function yearItself(d){
+        return d.year;
+    }
+    function callDirectly(f){
+        f();
+    }
+}
+
 function setupZoomButtons(inButton,outButton,containers,data){
     inButton.addEventListener('click',zoom(0.55));
     outButton.addEventListener('click',zoom(1.45));
@@ -257,6 +322,7 @@ function setupZoomButtons(inButton,outButton,containers,data){
                     if(newX>0&&newX<parentW) anyOnScreen = true;
                     return translate(newX,d.y*parentH);
                 });
+            updateYearMarkers(containers);
             setTimeout(function(){
                 if(!anyOnScreen){
                     var center = newRange.min + (newRange.max-newRange.min)/2;
@@ -280,6 +346,7 @@ function setupZoomButtons(inButton,outButton,containers,data){
                             if(newX>0&&newX<parentW) anyOnScreen = true;
                             return translate(newX,d.y*parentH);
                         });
+                    updateYearMarkers(containers);
             }
             },501);
         };
@@ -324,6 +391,7 @@ function setupDrag(containers){
                 });
             lastX = d3.event.clientX;
             clearSelection();
+            updateYearMarkers(containers,false);
         }
     });
 
@@ -340,7 +408,6 @@ function setupDrag(containers){
 
 function main(data){
     console.log(data);
-    var years = makeYearMarkers(data);
     var selections = {
         selected:[],
         unselected:data
@@ -372,6 +439,7 @@ function main(data){
             .attr("class","selected")
     };
     updateSelection(selections, containers, width, height);
+    updateYearMarkers(containers);
     setupSearch(document.querySelector("#filter-box"),data,containers);
     setupZoomButtons(document.querySelector("#zoom-in"),document.querySelector("#zoom-out"),containers,data);
     setupDrag(containers);
