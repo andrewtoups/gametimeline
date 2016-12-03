@@ -186,7 +186,7 @@ function dataSelectionToRange(data,pad){
 }
 
 function getRange(data){
-    if(data.selected.length === 0){
+    if(!data.selected || data.selected.length === 0){
         return dataSelectionToRange(data.unselected);
     } else {
         return dataSelectionToRange(data.selected);
@@ -229,29 +229,111 @@ function setRangeOnContainers(containers,range){
     containers.groupContainer.attr("rangeMax",range.max);
 }
 
-function setupZoomButtons(inButton,outButton,data,containers){
-    inButton.addEventListener('click',zoom(0.85));
-    outButton.addEventListener('click',zoom(1.15));
+function setupZoomButtons(inButton,outButton,containers,data){
+    inButton.addEventListener('click',zoom(0.55));
+    outButton.addEventListener('click',zoom(1.45));
     function zoom(howMuch){
         return function(){
             var oldRange = getRangeFromContainers(containers);
+            var rangeW = oldRange.max-oldRange.min;
             var newRange = widenRange(oldRange,howMuch);
             setRangeOnContainers(containers,newRange);
             var mn = newRange.min;
             var mx = newRange.max;
             var parentW = containers.wholeSvg.attr("width");
             var parentH = containers.wholeSvg.attr("height");
+            var anyOnScreen = false;
             containers.selected.selectAll(".item")
                 .transition().duration(500)
                 .attr("transform",function(d){
-                    return translate(transformX(d.year,mn,mx,parentW),d.y*parentH) + " "+scale(1.5,1.5);
+                    var newX = transformX(d.year,mn,mx,parentW);
+                    if(newX>0&&newX<parentW) anyOnScreen = true;
+                    return translate(newX,d.y*parentH) + " "+scale(1.5,1.5);
                 });
             containers.unselected.selectAll(".item")
                 .transition().duration(500)
                 .attr("transform",function(d){
-                    return translate(transformX(d.year,mn,mx,parentW),d.y*parentH);
-                });            
+                    var newX = transformX(d.year,mn,mx,parentW);
+                    if(newX>0&&newX<parentW) anyOnScreen = true;
+                    return translate(newX,d.y*parentH);
+                });
+            setTimeout(function(){
+                if(!anyOnScreen){
+                    var center = newRange.min + (newRange.max-newRange.min)/2;
+                    newRange.min = newRange.min-center+2000;
+                    newRange.max = newRange.max-center+2000;
+                    mn = newRange.min;
+                    mx = newRange.max;
+                    var newCenter = newRange.min + (newRange.max-newRange.min)/2;
+                    setRangeOnContainers(containers,newRange);
+                    containers.selected.selectAll(".item")
+                        .transition().duration(500)
+                        .attr("transform",function(d){
+                            var newX = transformX(d.year,mn,mx,parentW);
+                            if(newX>0&&newX<parentW) anyOnScreen = true;
+                            return translate(newX,d.y*parentH) + " "+scale(1.5,1.5);
+                        });
+                    containers.unselected.selectAll(".item")
+                    .transition().duration(500)
+                        .attr("transform",function(d){
+                            var newX = transformX(d.year,mn,mx,parentW);
+                            if(newX>0&&newX<parentW) anyOnScreen = true;
+                            return translate(newX,d.y*parentH);
+                        });
+            }
+            },501);
         };
+    }    
+}
+
+
+function setupDrag(containers){
+    var dragging = false;
+    var lastX = undefined;
+    var svg = containers.wholeSvg;
+    svg.on("mousedown",function(d,i){
+        dragging = true;
+        lastX = d3.event.clientX;
+        return true;
+    });
+    svg.on("mouseup",function(d,i){
+        dragging = false;
+        clearSelection();
+        return true;
+    });
+    svg.on("mousemove",function(d,i){
+        if(dragging){
+            var range = getRangeFromContainers(containers);
+            var width = range.max-range.min;
+            var yearsPerPixel = width/(+svg.attr("width"));
+            var delta = yearsPerPixel*(lastX - d3.event.clientX);
+            range.min += delta;
+            range.max += delta;
+            setRangeOnContainers(containers,range);
+            var mn = range.min;
+            var mx = range.max;
+            var parentW = containers.wholeSvg.attr("width");
+            var parentH = containers.wholeSvg.attr("height");
+            containers.selected.selectAll(".item")
+                .attr("transform",function(d){
+                    return translate(transformX(d.year,mn,mx,parentW),d.y*parentH) + " "+scale(1.5,1.5);
+                });
+            containers.unselected.selectAll(".item")
+                .attr("transform",function(d){
+                    return translate(transformX(d.year,mn,mx,parentW),d.y*parentH);
+                });
+            lastX = d3.event.clientX;
+            clearSelection();
+        }
+    });
+
+    function clearSelection() {
+        if(document.selection && document.selection.empty) {
+            document.selection.empty();
+        } else if(window.getSelection) {
+            var sel = window.getSelection();
+            sel.removeAllRanges();
+        }
     }
 
 }
@@ -291,7 +373,8 @@ function main(data){
     };
     updateSelection(selections, containers, width, height);
     setupSearch(document.querySelector("#filter-box"),data,containers);
-    setupZoomButtons(document.querySelector("#zoom-in"),document.querySelector("#zoom-out"),data,containers);
+    setupZoomButtons(document.querySelector("#zoom-in"),document.querySelector("#zoom-out"),containers,data);
+    setupDrag(containers);
 }
 
 
