@@ -82,7 +82,6 @@ function circleClickHandler(d){
     document.querySelector("#filter-box").dispatchEvent(evt);
 }
 
-
 function makeYearMarkers(data){
     var range = dataSelectionToRange(data);
     var largest = puff.max(Math.abs(range.min),Math.abs(range.max));
@@ -235,13 +234,13 @@ function numDigits(x) {
 
 function formatYearLabel(years){
     var absYear = Math.abs(years);
-        if      (absYear>=1000000000) {absYear=(absYear/1000000000).toFixed(0)+' GY';}
-        else if (absYear>=1000000)    {absYear=(absYear/1000000).toFixed(0)+' MY';}
+        if      (absYear>=100000000) {absYear=(absYear/100000000).toFixed(0)+' Billion Years';}
+        else if (absYear>=100000)    {absYear=(absYear/100000).toFixed(0)+' Million Years';}
         else if (absYear>=1000)       {absYear=absYear+'';}
         else if (absYear>1)           {absYear=absYear+'';}
         else if (absYear==1)          {absYear=absYear+'';}
         else                        {absYear='';}
-    return absYear+(years<0?' BCE':' CE');    
+    return absYear+(years<0?' BCE':' CE');
 }
 
 function calculateYears(range,discount){
