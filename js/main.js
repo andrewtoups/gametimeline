@@ -233,6 +233,17 @@ function numDigits(x) {
   return (Math.log10((x ^ (x >> 31)) - (x >> 31)) | 0) + 1;
 }
 
+function formatYearLabel(years){
+    var absYear = Math.abs(years);
+        if      (absYear>=1000000000) {absYear=(absYear/1000000000).toFixed(0)+' GY';}
+        else if (absYear>=1000000)    {absYear=(absYear/1000000).toFixed(0)+' MY';}
+        else if (absYear>=1000)       {absYear=absYear+'';}
+        else if (absYear>1)           {absYear=absYear+'';}
+        else if (absYear==1)          {absYear=absYear+'';}
+        else                        {absYear='';}
+    return absYear+(years<0?' BCE':' CE');    
+}
+
 function calculateYears(range,discount){
     discount = typeof discount === "undefined" ? 0 : discount;
     var ia = puff.ia;
@@ -249,10 +260,10 @@ function calculateYears(range,discount){
     out = out.map(function(y){
         return {
             year:y,
-            yearName:y.toString()
+            yearName:formatYearLabel(y)
         };
     });
-    if(out.length>50){
+    if(out.length>20){
         return calculateYears(range,discount-1);
     } else {
         return out;
