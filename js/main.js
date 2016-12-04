@@ -33,7 +33,7 @@ function remapData(data){
             yearName:data.yearName[i],
             game:data.game[i],
             game_lower:data.game[i].toLowerCase(),
-            info:data.info[i],
+            info:data.info[i] ? data.info[i].trim() : data.info[i],
             y:Math.random()*0.8+0.1
         });
     }
@@ -142,7 +142,7 @@ function updateSelection(selections,containers,parentW,parentH,range){
                         .attr("x",0)
                         .attr("y",-6)
                         .text(function(d){
-	                    return d.game+ (d.info ? d.info : "") + " : " + d.yearName;
+	                    return d.game+ (d.info ? " "+d.info+" " : "") + " : " + d.yearName;
 	                })
 	                .attr("text-anchor","middle");
                 })
