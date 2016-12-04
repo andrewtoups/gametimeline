@@ -50,10 +50,23 @@
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+
+  button {
+    background-color: $fami-white;
+  }
 }
 
 #notes {
   width:20%;
   float:left;
   display: none;
+}
+
+.year-marker {
+  line {
+    stroke: $fami-darkbeige;
+  }
+  text {
+    fill: $fami-darkred;
+  }
 }
