@@ -137,7 +137,8 @@ function updateSelection(selections,containers,parentW,parentH,range){
                         .attr("cx",0)
                         .attr("cy",0)
                         .attr("r",5)
-                        .on("click",circleClickHandler);
+                        .on("click",circleClickHandler)
+                        .on("mouseover",bindInput);
                     g.append("text")
                         .attr("x",0)
                         .attr("y",-6)
@@ -212,6 +213,10 @@ function setupSearch(box,data,containers){
     });
 }
 
+function bindInput(data){
+  document.getElementById('filter-box').value = data.game;
+}
+
 function getRangeFromContainers(containers){
     return {
         min:+containers.groupContainer.attr("rangeMin"),
@@ -278,14 +283,13 @@ function updateYearMarkers(containers,transition){
                                               .attr("x1",0)
                                               .attr("x2",0)
                                               .attr("y1",0)
-                                              .attr("y2",parentH)
-                                              .style("stroke","black");
+                                              .attr("y2",parentH);
                                               g.append("text").text(function(d){
                                                                                 return d.yearName;
-                                                                                }).attr("x",4).attr("y",20).style("stroke","black");
+                                                                                }).attr("x",4).attr("y",20);
                                               });
                             },501);
-    
+
     function yearItself(d){
         return d.year;
     }

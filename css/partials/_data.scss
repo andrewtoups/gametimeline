@@ -1,41 +1,96 @@
+
 svg {
     font-size: 10px;
 }
 
-text {
-  fill: $fami-black;
-  transition: transform .1s linear;
-  pointer-events: none;
-  z-index: 20;
+
+.item {
+    overflow: visible;
 }
 
-g.item {
-    overflow: visible;
+.unselected {
+
+  text {
+    transform: scale(1);
+    fill: $fami-copper;
+    opacity: .7;
+    text-shadow: none;
+    pointer-events: none;
+    transition:
+      transform $speed $ease,
+      opacity $speed $ease,
+      fill $speed $ease,
+      stroke $speed $ease,
+      font-weight $speed $ease;
+  }
+
+  circle {
+    opacity: .3;
+    fill: $fami-copper;
+    stroke: $fami-beige;
+    transition:
+      fill $speed $ease,
+      opacity $speed $ease;
+  }
+}
+
+
+circle {
+  &:hover {
+    opacity: 1;
+    stroke: $fami-red;
+    fill: $fami-highlight;
+    cursor: pointer;
+    transition:
+      fill $speed $ease,
+      opacity $speed $ease,
+      stroke $speed $ease;
+  }
+
+  &:hover ~ text {
+    transform: scale(2);
+    font-weight: 900;
+    opacity: 1;
+    fill: $fami-highlight;
+    stroke: $fami-red;
+    stroke-width: .3;
+    transition:
+      transform $speed $ease,
+      opacity $speed $ease,
+      fill $speed $ease,
+      stroke $speed $ease,
+      font-weight $speed $ease;
+  }
+
+}
+
+
+.selected {
+
+  text, circle {
+    fill: $fami-red;
+    opacity: 1;
+    stroke: $fami-highlight;
+    stroke-width: .1;
+  }
+
+  circle {
 
     &:hover {
-      fill: rgba($fami-darkbeige, .75);
-    }
-
-    circle:hover {
       fill: $fami-highlight;
-      cursor: pointer;
+      stroke: $fami-red;
+      stroke-width: 1;
     }
 
-    circle:hover ~ text {
+    &:hover ~ text {
       fill: $fami-highlight;
-      transform: scale(2);
-      transition: transform .1s linear;
+      stroke: $fami-red;
+      stroke-width: .3;
     }
+
+  }
 }
 
-g.selected {
-    fill: black;
-}
-
-
-g.unselected {
-    fill:rgba(0,0,0,0.1);
-}
 
 rect.pane {
     cursor: move;

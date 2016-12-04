@@ -1,5 +1,5 @@
 #timeline {
-    background-color: $fami-darkbeige;
+    background-color: $fami-beige;
     height: 100vh;
     width: 100vw;
     position: relative;
@@ -12,7 +12,7 @@
   display: flex;
 
   > * {
-    background-color: rgba($fami-beige, .5);
+    background-color: rgba($fami-red, .5);
     padding: 5px;
   }
 
@@ -31,6 +31,7 @@
 #controls {
   display: flex;
   flex-direction: row;
+  width: 50%;
 
   > * {
     margin: 0 5px;
@@ -39,6 +40,9 @@
 
 #filter-box {
   font-size: 2rem;
+  background-color: $fami-white;
+  padding: .5rem;
+  flex: 1;
 }
 
 #zoom {
@@ -46,10 +50,23 @@
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
+
+  button {
+    background-color: $fami-white;
+  }
 }
 
 #notes {
   width:20%;
   float:left;
   display: none;
+}
+
+.year-marker {
+  line {
+    stroke: $fami-darkbeige;
+  }
+  text {
+    fill: $fami-darkred;
+  }
 }

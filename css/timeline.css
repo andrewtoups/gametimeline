@@ -1,29 +1,50 @@
 svg {
   font-size: 10px; }
 
-text {
-  fill: #2c292c;
-  transition: transform .1s linear;
-  pointer-events: none;
-  z-index: 20; }
-
-g.item {
+.item {
   overflow: visible; }
-  g.item:hover {
-    fill: rgba(213, 191, 170, 0.75); }
-  g.item circle:hover {
-    fill: #e8ae11;
-    cursor: pointer; }
-  g.item circle:hover ~ text {
-    fill: #e8ae11;
-    transform: scale(2);
-    transition: transform .1s linear; }
 
-g.selected {
-  fill: black; }
+.unselected text {
+  transform: scale(1);
+  fill: #987868;
+  opacity: .7;
+  text-shadow: none;
+  pointer-events: none;
+  transition: transform 200ms ease, opacity 200ms ease, fill 200ms ease, stroke 200ms ease, font-weight 200ms ease; }
+.unselected circle {
+  opacity: .3;
+  fill: #987868;
+  stroke: #e6dbce;
+  transition: fill 200ms ease, opacity 200ms ease; }
 
-g.unselected {
-  fill: rgba(0, 0, 0, 0.1); }
+circle:hover {
+  opacity: 1;
+  stroke: #81061d;
+  fill: #e8ae11;
+  cursor: pointer;
+  transition: fill 200ms ease, opacity 200ms ease, stroke 200ms ease; }
+circle:hover ~ text {
+  transform: scale(2);
+  font-weight: 900;
+  opacity: 1;
+  fill: #e8ae11;
+  stroke: #81061d;
+  stroke-width: .3;
+  transition: transform 200ms ease, opacity 200ms ease, fill 200ms ease, stroke 200ms ease, font-weight 200ms ease; }
+
+.selected text, .selected circle {
+  fill: #81061d;
+  opacity: 1;
+  stroke: #e8ae11;
+  stroke-width: .1; }
+.selected circle:hover {
+  fill: #e8ae11;
+  stroke: #81061d;
+  stroke-width: 1; }
+.selected circle:hover ~ text {
+  fill: #e8ae11;
+  stroke: #81061d;
+  stroke-width: .3; }
 
 rect.pane {
   cursor: move;
@@ -31,7 +52,7 @@ rect.pane {
   pointer-events: all; }
 
 #timeline {
-  background-color: #d5bfaa;
+  background-color: #e6dbce;
   height: 100vh;
   width: 100vw;
   position: relative;
@@ -42,7 +63,7 @@ rect.pane {
   width: calc(100% - 5px);
   display: flex; }
   #footer > *, #header > * {
-    background-color: rgba(230, 219, 206, 0.5);
+    background-color: rgba(129, 6, 29, 0.5);
     padding: 5px; }
 
 #header {
@@ -55,23 +76,34 @@ rect.pane {
 
 #controls {
   display: flex;
-  flex-direction: row; }
+  flex-direction: row;
+  width: 50%; }
   #controls > * {
     margin: 0 5px; }
 
 #filter-box {
-  font-size: 2rem; }
+  font-size: 2rem;
+  background-color: #fff8ef;
+  padding: .5rem;
+  flex: 1; }
 
 #zoom {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: 100%; }
+  #zoom button {
+    background-color: #fff8ef; }
 
 #notes {
   width: 20%;
   float: left;
   display: none; }
+
+.year-marker line {
+  stroke: #d5bfaa; }
+.year-marker text {
+  fill: #7a1b1d; }
 
 body {
   background: #e6dbce;
