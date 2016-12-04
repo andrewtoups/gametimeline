@@ -283,14 +283,13 @@ function updateYearMarkers(containers,transition){
                                               .attr("x1",0)
                                               .attr("x2",0)
                                               .attr("y1",0)
-                                              .attr("y2",parentH)
-                                              .style("stroke","black");
+                                              .attr("y2",parentH);
                                               g.append("text").text(function(d){
                                                                                 return d.yearName;
-                                                                                }).attr("x",4).attr("y",20).style("stroke","black");
+                                                                                }).attr("x",4).attr("y",20);
                                               });
                             },501);
-    
+
     function yearItself(d){
         return d.year;
     }
