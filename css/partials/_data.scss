@@ -8,46 +8,60 @@ svg {
     overflow: visible;
 }
 
-text {
-  transform: scale(1);
-  fill: $fami-darkbeige;
-  opacity: .5;
-  text-shadow: none;
-  pointer-events: none;
-  transition:
-    transform $speed $ease,
-    opacity $speed $ease,
-    fill $speed $ease,
-    text-shadow $speed $ease;
-}
+.unselected {
 
-circle {
-  opacity: .1;
-  fill: $fami-copper;
-  transition:
-  fill $speed $ease,
-  opacity $speed $ease;
-
-  &:hover {
-    fill: $fami-highlight;
-    opacity: 1;
-    cursor: pointer;
-    transition:
-      fill $speed $ease,
-      opacity $speed $ease;
-  }
-
-  &:hover ~ text {
-    transform: scale(2);
-    opacity: 1;
-    fill: $fami-highlight;
-    text-shadow: 0 0 5px $fami-black;
+  text {
+    transform: scale(1);
+    fill: $fami-copper;
+    opacity: .7;
+    text-shadow: none;
+    pointer-events: none;
     transition:
       transform $speed $ease,
       opacity $speed $ease,
       fill $speed $ease,
-      text-shadow $speed $ease;
+      stroke $speed $ease,
+      font-weight $speed $ease;
   }
+
+  circle {
+    opacity: .3;
+    fill: $fami-copper;
+    stroke: $fami-beige;
+    transition:
+      fill $speed $ease,
+      opacity $speed $ease;
+  }
+}
+
+
+circle {
+  &:hover {
+    opacity: 1;
+    stroke: $fami-red;
+    fill: $fami-highlight;
+    cursor: pointer;
+    transition:
+      fill $speed $ease,
+      opacity $speed $ease,
+      stroke $speed $ease;
+  }
+
+  &:hover ~ text {
+    transform: scale(2);
+    font-weight: 900;
+    opacity: 1;
+    fill: $fami-highlight;
+    stroke: $fami-red;
+    stroke-width: .3;
+    transition:
+      transform $speed $ease,
+      opacity $speed $ease,
+      fill $speed $ease,
+      stroke $speed $ease,
+      font-weight $speed $ease;
+  }
+
 }
 
 
@@ -56,35 +70,27 @@ circle {
   text, circle {
     fill: $fami-red;
     opacity: 1;
+    stroke: $fami-highlight;
+    stroke-width: .1;
   }
-
-  circle:hover {
-    fill: $fami-highlight;
-  }
-}
-
-
-.unselected {
 
   circle {
-    opacity: .1;
 
     &:hover {
-      opacity: 1;
+      fill: $fami-highlight;
+      stroke: $fami-red;
+      stroke-width: 1;
     }
-  }
 
-  text {
-    opacity: .5;
-  }
+    &:hover ~ text {
+      fill: $fami-highlight;
+      stroke: $fami-red;
+      stroke-width: .3;
+    }
 
-  text, circle {
-    transition:
-      transform $speed $ease,
-      opacity $speed $ease,
-      fill $speed $ease;
   }
 }
+
 
 rect.pane {
     cursor: move;
