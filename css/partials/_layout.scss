@@ -31,6 +31,7 @@
 #controls {
   display: flex;
   flex-direction: row;
+  width: 50%;
 
   > * {
     margin: 0 5px;
@@ -39,6 +40,9 @@
 
 #filter-box {
   font-size: 2rem;
+  background-color: $fami-white;
+  padding: .5rem;
+  flex: 1;
 }
 
 #zoom {
