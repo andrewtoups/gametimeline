@@ -1,18 +1,18 @@
 #timeline {
-    background-color: $fami-beige;
-    height: 100vh;
-    width: 100vw;
-    position: relative;
-    overflow: hidden;
+  background-color: $fami-beige;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow: hidden;
 }
 
 #footer, #header {
   position: fixed;
   width: calc(100% - 5px);
-  display: flex;
+  @include display(flex);
 
   > * {
-    background-color: rgba($fami-red, .5);
+    background-color: rgba($fami-red, 1);
     padding: 5px;
   }
 
@@ -20,7 +20,7 @@
 
 #header {
   top: 5px;
-  justify-content: flex-end;
+  @include justify-content(flex-end);
 }
 
 #footer {
@@ -135,7 +135,6 @@
 
 #notes {
   width:20%;
-  float:left;
   display: none;
 }
 
