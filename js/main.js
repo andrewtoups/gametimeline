@@ -137,7 +137,8 @@ function updateSelection(selections,containers,parentW,parentH,range){
                         .attr("cy",0)
                         .attr("r",5)
                         .on("click",circleClickHandler)
-                        .on("mouseover",bindInput);
+                        .on("mouseover",bindInput)
+                        .on("mouseout",releaseInput);
                     g.append("text")
                         .attr("x",0)
                         .attr("y",-6)
@@ -213,7 +214,15 @@ function setupSearch(box,data,containers){
 }
 
 function bindInput(data){
-  document.getElementById('filter-box').value = data.game;
+  this.lastSearch = document.getElementById('filter-box').value;
+  document.getElementById('filter-box').value = null;
+  document.getElementById('filter-box').placeholder = data.game;
+}
+
+function releaseInput(){
+  document.getElementById('filter-box').placeholder = 'Search for a Game';
+  document.getElementById('filter-box').value = this.lastSearch || null;
+  delete this.lastSearch;
 }
 
 function getRangeFromContainers(containers){
