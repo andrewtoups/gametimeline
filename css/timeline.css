@@ -186,12 +186,22 @@ rect.pane {
   padding: 5px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  border-bottom-left-radius: 5px; }
+  border-bottom-left-radius: 5px;
+  position: relative; }
   #filter h3 {
     color: #2c292c;
     text-align: center;
     font-family: NES;
     margin: 0; }
+
+#logo {
+  margin: 0;
+  font-family: fami;
+  color: #e8ae11;
+  text-shadow: 0 0 5px #2c292c;
+  position: absolute;
+  top: 3px;
+  left: 10px; }
 
 #filter-box {
   font-size: 2rem;

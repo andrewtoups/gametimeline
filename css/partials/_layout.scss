@@ -55,6 +55,7 @@
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
   border-bottom-left-radius: 5px;
+  position: relative;
 
   h3 {
     color: $fami-black;
@@ -62,6 +63,16 @@
     font-family: NES;
     margin: 0;
   }
+}
+
+#logo {
+  margin: 0;
+  font-family: fami;
+  color: $fami-highlight;
+  text-shadow: 0 0 5px $fami-black;
+  position: absolute;
+  top: 3px;
+  left: 10px;
 }
 
 #filter-box {
