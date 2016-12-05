@@ -46,16 +46,36 @@
   width: 50%;
 }
 
-  > * {
-    margin: 0 5px;
+#filter {
+  @include flex(1 0 auto);
+  @include display(flex);
+  @include flex-direction(column);
+  background-color: $fami-copper;
+  padding: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+
+  h3 {
+    color: $fami-black;
+    text-align: center;
+    font-family: NES;
+    margin: 0;
   }
 }
 
 #filter-box {
   font-size: 2rem;
-  background-color: $fami-white;
-  padding: .5rem;
-  flex: 1;
+  background-color: $fami-red;
+  border: solid 5px;
+  border-top-color: $fami-darkred;
+  border-left-color: $fami-darkred;
+  border-bottom-color: $fami-lightred;
+  border-right-color: $fami-lightred;
+  border-radius: 2rem;
+  color: $fami-highlight;
+  padding: 0 1rem;
+  @include flex(1 0 auto);
 }
 
 #zoom {
