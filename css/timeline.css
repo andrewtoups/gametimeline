@@ -1,3 +1,15 @@
+@font-face {
+  font-family: fami;
+  src: url("fonts/AvantGardeCapsAlts-Medium.ttf"); }
+@font-face {
+  font-family: fami-bold;
+  src: url("fonts/AvantGardeCapsAlts-Demi.ttf"); }
+@font-face {
+  font-family: NES;
+  src: url("fonts/NES_Controller_MrShrike.ttf"); }
+@font-face {
+  font-family: NES-CAD;
+  src: url("fonts/NES_Controller_CAD_MrShrike.ttf"); }
 svg {
   font-size: 10px; }
 

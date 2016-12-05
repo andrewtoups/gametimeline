@@ -25,7 +25,19 @@
 
 #footer {
   bottom: 5px;
-  justify-content: center;
+  @include justify-content(center);
+  @include align-items(stretch);
+  > * {
+    border: 2px solid $fami-copper;
+  }
+}
+
+#title {
+  @include align-self(center);
+  font-family: fami, helvetica, sans-serif;
+  margin: 0 10px;
+  color: $fami-highlight;
+  font-weight: 100;
 }
 
 #controls {
