@@ -41,9 +41,10 @@
 }
 
 #controls {
-  display: flex;
-  flex-direction: row;
+  @include display(flex);
+  @include flex-direction(row);
   width: 50%;
+}
 
   > * {
     margin: 0 5px;
@@ -58,13 +59,57 @@
 }
 
 #zoom {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
+  @include display(flex);
+  @include flex-direction(row);
+  @include justify-content(space-between);
+  @include align-items(flex-end);
+  @include align-self(flex-end);
+  padding: 4px;
+  background-color: $fami-copper;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+
+  .fami-button {
+    @include display(flex);
+    @include flex-direction(column-reverse);
+    margin: 0 5px;
+  }
+
+  button, label {
+    width: 1.5rem;
+    background-color: $fami-black;
+    margin: 1px 0;
+    border-radius: .75rem;
+  }
+
+  label {
+    display: block;
+    text-align: center;
+    font-size: .75rem;
+    color: $fami-copper;
+    font-weight: bold;
+  }
 
   button {
-    background-color: $fami-white;
+    color: $fami-highlight;
+    border: 2px solid $fami-red;
+    height: 1.5rem;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 2px $fami-highlight;
+    }
+
+    &:active {
+      background-color: $fami-highlight;
+    }
+
+  }
+
+  button:active ~ label {
+    color: $fami-highlight;
+    text-shadow: 0 0 10px $fami-highlight;
   }
 }
 
