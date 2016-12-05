@@ -1,18 +1,18 @@
 #timeline {
-    background-color: $fami-beige;
-    height: 100vh;
-    width: 100vw;
-    position: relative;
-    overflow: hidden;
+  background-color: $fami-beige;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow: hidden;
 }
 
 #footer, #header {
   position: fixed;
   width: calc(100% - 5px);
-  display: flex;
+  @include display(flex);
 
   > * {
-    background-color: rgba($fami-red, .5);
+    background-color: rgba($fami-red, 1);
     padding: 5px;
   }
 
@@ -20,45 +20,121 @@
 
 #header {
   top: 5px;
-  justify-content: flex-end;
+  @include justify-content(flex-end);
 }
 
 #footer {
   bottom: 5px;
-  justify-content: center;
+  @include justify-content(center);
+  @include align-items(stretch);
+  > * {
+    border: 2px solid $fami-copper;
+  }
+}
+
+#title {
+  @include align-self(center);
+  font-family: fami, helvetica, sans-serif;
+  margin: 0 10px;
+  color: $fami-highlight;
+  font-weight: 100;
 }
 
 #controls {
-  display: flex;
-  flex-direction: row;
+  @include display(flex);
+  @include flex-direction(row);
   width: 50%;
+}
 
-  > * {
-    margin: 0 5px;
+#filter {
+  @include flex(1 0 auto);
+  @include display(flex);
+  @include flex-direction(column);
+  background-color: $fami-copper;
+  padding: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+
+  h3 {
+    color: $fami-black;
+    text-align: center;
+    font-family: NES;
+    margin: 0;
   }
 }
 
 #filter-box {
   font-size: 2rem;
-  background-color: $fami-white;
-  padding: .5rem;
-  flex: 1;
+  background-color: $fami-red;
+  border: solid 5px;
+  border-top-color: $fami-darkred;
+  border-left-color: $fami-darkred;
+  border-bottom-color: $fami-lightred;
+  border-right-color: $fami-lightred;
+  border-radius: 2rem;
+  color: $fami-highlight;
+  padding: 0 1rem;
+  @include flex(1 0 auto);
 }
 
 #zoom {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
+  @include display(flex);
+  @include flex-direction(row);
+  @include justify-content(space-between);
+  @include align-items(flex-end);
+  @include align-self(flex-end);
+  padding: 4px;
+  background-color: $fami-copper;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+
+  .fami-button {
+    @include display(flex);
+    @include flex-direction(column-reverse);
+    margin: 0 5px;
+  }
+
+  button, label {
+    width: 1.5rem;
+    background-color: $fami-black;
+    margin: 1px 0;
+    border-radius: .75rem;
+  }
+
+  label {
+    display: block;
+    text-align: center;
+    font-size: .75rem;
+    color: $fami-copper;
+    font-weight: bold;
+  }
 
   button {
-    background-color: $fami-white;
+    color: $fami-highlight;
+    border: 2px solid $fami-red;
+    height: 1.5rem;
+    cursor: pointer;
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 2px $fami-highlight;
+    }
+
+    &:active {
+      background-color: $fami-highlight;
+    }
+
+  }
+
+  button:active ~ label {
+    color: $fami-highlight;
+    text-shadow: 0 0 10px $fami-highlight;
   }
 }
 
 #notes {
   width:20%;
-  float:left;
   display: none;
 }
 

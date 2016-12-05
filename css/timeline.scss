@@ -1,6 +1,8 @@
-$speed: 200ms;
-$ease: ease;
+$speed: 100ms;
+$ease: ease-in-out;
 
+@import 'partials/fonts';
+@import 'partials/bourbon/bourbon';
 @import 'partials/palette';
 @import 'partials/data';
 @import 'partials/layout';
@@ -11,4 +13,16 @@ body {
   font-family: sans-serif;
   font-weight: 100;
   margin: 0;
+}
+
+svg {
+  shape-rendering: optimizeSpeed;
+  &:hover, .selected {
+    shape-rendering: geometricPrecision;
+  }
+}
+
+:focus {
+  outline: none;
+  box-shadow: 0 0 10px $fami-highlight;
 }

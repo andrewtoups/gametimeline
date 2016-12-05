@@ -82,7 +82,6 @@ function circleClickHandler(d){
     document.querySelector("#filter-box").dispatchEvent(evt);
 }
 
-
 function makeYearMarkers(data){
     var range = dataSelectionToRange(data);
     var largest = puff.max(Math.abs(range.min),Math.abs(range.max));
@@ -138,7 +137,8 @@ function updateSelection(selections,containers,parentW,parentH,range){
                         .attr("cy",0)
                         .attr("r",5)
                         .on("click",circleClickHandler)
-                        .on("mouseover",bindInput);
+                        .on("mouseover",bindInput)
+                        .on("mouseout",releaseInput);
                     g.append("text")
                         .attr("x",0)
                         .attr("y",-6)
@@ -214,7 +214,15 @@ function setupSearch(box,data,containers){
 }
 
 function bindInput(data){
-  document.getElementById('filter-box').value = data.game;
+  this.lastSearch = document.getElementById('filter-box').value;
+  document.getElementById('filter-box').value = null;
+  document.getElementById('filter-box').placeholder = data.game;
+}
+
+function releaseInput(){
+  document.getElementById('filter-box').placeholder = 'Search for a Game';
+  document.getElementById('filter-box').value = this.lastSearch || null;
+  delete this.lastSearch;
 }
 
 function getRangeFromContainers(containers){
@@ -235,13 +243,13 @@ function numDigits(x) {
 
 function formatYearLabel(years){
     var absYear = Math.abs(years);
-        if      (absYear>=1000000000) {absYear=(absYear/1000000000).toFixed(0)+' GY';}
-        else if (absYear>=1000000)    {absYear=(absYear/1000000).toFixed(0)+' MY';}
+        if      (absYear>=100000000) {absYear=(absYear/100000000).toFixed(0)+' Billion Years';}
+        else if (absYear>=100000)    {absYear=(absYear/100000).toFixed(0)+' Million Years';}
         else if (absYear>=1000)       {absYear=absYear+'';}
         else if (absYear>1)           {absYear=absYear+'';}
         else if (absYear==1)          {absYear=absYear+'';}
         else                        {absYear='';}
-    return absYear+(years<0?' BCE':' CE');    
+    return absYear+(years<0?' BCE':' CE');
 }
 
 function calculateYears(range,discount){
