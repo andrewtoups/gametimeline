@@ -13,52 +13,45 @@ svg {
   text {
     transform: scale(1);
     fill: $fami-copper;
-    opacity: .7;
     text-shadow: none;
     pointer-events: none;
     transition:
       transform $speed $ease,
-      opacity $speed $ease,
       fill $speed $ease,
-      stroke $speed $ease,
+      stroke-width $speed $ease,
       font-weight $speed $ease;
   }
 
   circle {
-    opacity: .3;
-    fill: $fami-copper;
-    stroke: $fami-beige;
+    transform: scale(1);
+    fill: $fami-lightred;
     transition:
       fill $speed $ease,
-      opacity $speed $ease;
+      transform $speed*3 $ease;
   }
 }
 
 
 circle {
   &:hover {
-    opacity: 1;
     stroke: $fami-red;
     fill: $fami-highlight;
     cursor: pointer;
     transition:
       fill $speed $ease,
-      opacity $speed $ease,
-      stroke $speed $ease;
+      stroke-width $speed $ease;
   }
 
   &:hover ~ text {
     transform: scale(2);
     font-weight: 900;
-    opacity: 1;
     fill: $fami-highlight;
     stroke: $fami-red;
     stroke-width: .3;
     transition:
       transform $speed $ease,
-      opacity $speed $ease,
       fill $speed $ease,
-      stroke $speed $ease,
+      stroke-width $speed $ease,
       font-weight $speed $ease;
   }
 
@@ -69,23 +62,24 @@ circle {
 
   text, circle {
     fill: $fami-red;
-    opacity: 1;
     stroke: $fami-highlight;
     transform: scale(2);
     transition:
-      transform $speed $ease,
-      opacity $speed $ease,
       fill $speed $ease,
-      stroke $speed $ease,
+      stroke-width $speed $ease,
       font-weight $speed $ease;
   }
 
   text {
     stroke-width: .1;
+    transition:
+      transform $speed $ease;
   }
 
   circle {
     stroke-width: .5;
+    transition:
+      transform $speed*3 $ease;
 
     &:hover {
       fill: $fami-highlight;
@@ -93,9 +87,8 @@ circle {
       stroke-width: 1;
       transition:
         transform $speed $ease,
-        opacity $speed $ease,
         fill $speed $ease,
-        stroke $speed $ease,
+        stroke-width $speed $ease,
         font-weight $speed $ease;
     }
 
@@ -106,9 +99,8 @@ circle {
       transform: scale(3);
       transition:
         transform $speed $ease,
-        opacity $speed $ease,
         fill $speed $ease,
-        stroke $speed $ease,
+        stroke-width $speed $ease,
         font-weight $speed $ease;
     }
 
