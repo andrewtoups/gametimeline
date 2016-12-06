@@ -19,52 +19,49 @@ svg {
 .unselected text {
   transform: scale(1);
   fill: #987868;
-  opacity: .7;
   text-shadow: none;
   pointer-events: none;
-  transition: transform 100ms ease-in-out, opacity 100ms ease-in-out, fill 100ms ease-in-out, stroke 100ms ease-in-out, font-weight 100ms ease-in-out; }
+  transition: transform 100ms ease-in-out, fill 100ms ease-in-out, stroke-width 100ms ease-in-out, font-weight 100ms ease-in-out; }
 .unselected circle {
-  opacity: .3;
-  fill: #987868;
-  stroke: #e6dbce;
-  transition: fill 100ms ease-in-out, opacity 100ms ease-in-out; }
+  transform: scale(1);
+  fill: #b5443a;
+  transition: fill 100ms ease-in-out, transform 300ms ease-in-out; }
 
 circle:hover {
-  opacity: 1;
   stroke: #800309;
   fill: #e8ae11;
   cursor: pointer;
-  transition: fill 100ms ease-in-out, opacity 100ms ease-in-out, stroke 100ms ease-in-out; }
+  transition: fill 100ms ease-in-out, stroke-width 100ms ease-in-out; }
 circle:hover ~ text {
   transform: scale(2);
   font-weight: 900;
-  opacity: 1;
   fill: #e8ae11;
   stroke: #800309;
   stroke-width: .3;
-  transition: transform 100ms ease-in-out, opacity 100ms ease-in-out, fill 100ms ease-in-out, stroke 100ms ease-in-out, font-weight 100ms ease-in-out; }
+  transition: transform 100ms ease-in-out, fill 100ms ease-in-out, stroke-width 100ms ease-in-out, font-weight 100ms ease-in-out; }
 
 .selected text, .selected circle {
   fill: #800309;
-  opacity: 1;
   stroke: #e8ae11;
   transform: scale(2);
-  transition: transform 100ms ease-in-out, opacity 100ms ease-in-out, fill 100ms ease-in-out, stroke 100ms ease-in-out, font-weight 100ms ease-in-out; }
+  transition: fill 100ms ease-in-out, stroke-width 100ms ease-in-out, font-weight 100ms ease-in-out; }
 .selected text {
-  stroke-width: .1; }
+  stroke-width: .1;
+  transition: transform 100ms ease-in-out; }
 .selected circle {
-  stroke-width: .5; }
+  stroke-width: .5;
+  transition: transform 300ms ease-in-out; }
   .selected circle:hover {
     fill: #e8ae11;
     stroke: #800309;
     stroke-width: 1;
-    transition: transform 100ms ease-in-out, opacity 100ms ease-in-out, fill 100ms ease-in-out, stroke 100ms ease-in-out, font-weight 100ms ease-in-out; }
+    transition: transform 100ms ease-in-out, fill 100ms ease-in-out, stroke-width 100ms ease-in-out, font-weight 100ms ease-in-out; }
   .selected circle:hover ~ text {
     fill: #e8ae11;
     stroke: #800309;
     stroke-width: .3;
     transform: scale(3);
-    transition: transform 100ms ease-in-out, opacity 100ms ease-in-out, fill 100ms ease-in-out, stroke 100ms ease-in-out, font-weight 100ms ease-in-out; }
+    transition: transform 100ms ease-in-out, fill 100ms ease-in-out, stroke-width 100ms ease-in-out, font-weight 100ms ease-in-out; }
 
 rect.pane {
   cursor: move;
