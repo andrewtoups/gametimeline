@@ -8,7 +8,7 @@
 
 #footer, #header {
   position: fixed;
-  width: calc(100% - 5px);
+  width: 100%;
   @include display(flex);
 
   > * {
@@ -49,18 +49,21 @@
   @include quarter {
     width: 75%;
     transition: width $speed $ease;
+
   }
 
   @include full {
     width: 100%;
     transition: width $speed $ease;
   }
+
 }
 
 #filter {
-  @include flex(1 0 auto);
+  @include flex(1 1 auto);
   @include display(flex);
   @include flex-direction(column);
+  min-width: 0;
   background-color: $fami-copper;
   padding: 5px;
   border-top-left-radius: 5px;

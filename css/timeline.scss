@@ -8,6 +8,10 @@ $ease: ease-in-out;
 @import 'partials/data';
 @import 'partials/layout';
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   background: $fami-beige;
   color: $fami-darkred;
