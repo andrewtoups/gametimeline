@@ -12,7 +12,7 @@ svg {
 
   text {
     transform: scale(1);
-    fill: $fami-copper;
+    fill: $fami-coppertrans;
     text-shadow: none;
     pointer-events: none;
     transition:
@@ -24,7 +24,7 @@ svg {
 
   circle {
     transform: scale(1);
-    fill: $fami-lightred;
+    fill: $fami-redtrans;
     transition:
       fill $speed $ease,
       transform $speed*3 $ease;
