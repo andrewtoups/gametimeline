@@ -2,6 +2,7 @@ $speed: 100ms;
 $ease: ease-in-out;
 
 @import 'partials/fonts';
+@import 'partials/mixins';
 @import 'partials/bourbon/bourbon';
 @import 'partials/palette';
 @import 'partials/data';

@@ -44,6 +44,17 @@
   @include display(flex);
   @include flex-direction(row);
   width: 50%;
+  transition: width $speed $ease;
+
+  @include quarter {
+    width: 75%;
+    transition: width $speed $ease;
+  }
+
+  @include full {
+    width: 100%;
+    transition: width $speed $ease;
+  }
 }
 
 #filter {
