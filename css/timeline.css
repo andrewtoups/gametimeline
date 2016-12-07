@@ -18,13 +18,13 @@ svg {
 
 .unselected text {
   transform: scale(1);
-  fill: #987868;
+  fill: #bfaa9b;
   text-shadow: none;
   pointer-events: none;
   transition: transform 100ms ease-in-out, fill 100ms ease-in-out, stroke-width 100ms ease-in-out, font-weight 100ms ease-in-out; }
 .unselected circle {
   transform: scale(1);
-  fill: #b5443a;
+  fill: #cd9084;
   transition: fill 100ms ease-in-out, transform 300ms ease-in-out; }
 
 circle:hover {
@@ -152,7 +152,16 @@ rect.pane {
   -moz-flex-direction: row;
   flex-direction: row;
   -ms-flex-direction: row;
-  width: 50%; }
+  width: 50%;
+  transition: width 100ms ease-in-out; }
+  @media (max-width: 1200px) {
+    #controls {
+      width: 75%;
+      transition: width 100ms ease-in-out; } }
+  @media (max-width: 700px) {
+    #controls {
+      width: 100%;
+      transition: width 100ms ease-in-out; } }
 
 #filter {
   -webkit-box-flex: 1;
